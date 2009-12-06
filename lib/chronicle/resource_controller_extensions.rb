@@ -13,7 +13,9 @@ module Chronicle::ResourceControllerExtensions
         when params[:version] && version = model.versions.get_version(params[:version].to_i)
           flash[:notice] = "Loaded version #{version.number}. Click save to revert to this content."
           version.instance
-        when model.respond_to?(:current)
+        when model.respond_to?(:current) && model.respond_to?(:versions)
+          # check for both 'current' and 'versions' methods because some other extensions use the current
+          # method.  The reader extension is known to do this, but there may be others
           model.current
         else
           model
