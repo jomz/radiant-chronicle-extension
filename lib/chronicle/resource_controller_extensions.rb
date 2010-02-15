@@ -3,6 +3,7 @@ module Chronicle::ResourceControllerExtensions
     base.class_eval do
       alias_method_chain :load_model, :version
       alias_method_chain :clear_model_cache, :draft_awareness
+      before_filter :set_status, :only => [:create, :update]
     end
   end
   
@@ -29,5 +30,9 @@ module Chronicle::ResourceControllerExtensions
     if model.respond_to?(:status_id) && model.status_id >= Status[:published].id
       clear_model_cache_without_draft_awareness
     end
+  end
+  
+  def set_status
+    params[model_symbol][:status_id] = params[:publish] ? Status['Published'].id : Status['Draft'].id
   end
 end

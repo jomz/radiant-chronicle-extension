@@ -16,6 +16,7 @@ class ChronicleExtension < Radiant::Extension
 
   def activate
     require 'chronicle/diff'
+    ActiveRecord::Base.send :include, Chronicle::Versioned      # defines Class.versioned? method to complement Class#versioning_emabled?
     ActiveRecord::Base::VersionsProxyMethods.class_eval { include Chronicle::VersionsProxyMethods }
     ActiveRecord::Associations::AssociationCollection.class_eval { include Chronicle::AssociationCollectionExtensions }
     Version.class_eval { include Chronicle::VersionExtensions }
@@ -33,6 +34,8 @@ class ChronicleExtension < Radiant::Extension
     Admin::SnippetsController.class_eval { include Chronicle::Interface }
     Admin::LayoutsController.class_eval { include Chronicle::Interface }
 
+    ApplicationHelper.send :include, Chronicle::HelperExtensions
+
     admin.page.edit.add :main, "admin/timeline", :before => "edit_header"
     admin.page.edit.add :main, 'admin/version_diff_popup'
     admin.page.edit.add :form_bottom, 'view_page_after_save'
@@ -41,13 +44,13 @@ class ChronicleExtension < Radiant::Extension
 
     admin.snippet.edit.add :main, "admin/timeline", :before => "edit_header"
     admin.snippet.edit.add :main, 'admin/version_diff_popup'
-    admin.snippet.edit.add :form, 'status_field', :before => 'edit_timestamp'
+    # admin.snippet.edit.add :form, 'status_field', :before => 'edit_timestamp'
     admin.snippet.index.add :tbody, 'status_cell', :before => "modify_cell"
     admin.snippet.index.add :thead, 'status_header', :before => "modify_header"
 
     admin.layout.edit.add :main, "admin/timeline", :before => "edit_header"
     admin.layout.edit.add :main, 'admin/version_diff_popup'
-    admin.layout.edit.add :form, 'status_field', :before => 'edit_timestamp'
+    # admin.layout.edit.add :form, 'status_field', :before => 'edit_timestamp'
     admin.layout.index.add :tbody, 'status_cell', :before => "modify_cell"
     admin.layout.index.add :thead, 'status_header', :before => "modify_header"
 

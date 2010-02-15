@@ -45,4 +45,5 @@ module Admin::VersionsHelper
     return "" if status_ids.compact.empty?
     format_diff status_ids.map {|status_id| status_id.nil? ? "" : Status.find(status_id).name }
   end
+  
 end

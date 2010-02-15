@@ -1,0 +1,17 @@
+- fields_for :page, @page do |fields|
+  .row
+    %p
+      %label{:for=>"page_layout_id"}
+        Layout
+      = fields.select :layout_id, [['<inherit>', '']] + Layout.find(:all).map { |s| [s.name, s.id] }
+    %p
+      %label{:for=>"page_class_name"}
+        Page Type
+      = fields.select :class_name, [['<normal>', '']] + Page.descendants.map { |p| [p.display_name, p.name] }.sort_by { |p| p.first }
+    - if @config['page.edit.published_date?']
+      %p#publication-date{:style => "display: none"}
+        %label{:for=>"page_published_at"}
+          Published At
+        = fields.datetime_select :published_at, :disabled => true
+    = render_region :layout_row, :locals => {:f => fields}
+  %span.clear &nbsp;
