@@ -1,5 +1,5 @@
 h1. Chronicle
-
+ 
 In an enterprise production environment, it's critical that content editors, designers, and developers be able to edit pages and preview their changes without affecting the live version and that site administrators be able to see who changed what and roll back if necessary.
 
 This extension adds versioning to pages, snippets, and layouts and uses their status to determine its visibility. The most recent published or hidden version is visible in live mode and the most recent version, a.k.a. the "current version," is visible in dev mode regardless of its status. Thus, you can work on a draft in dev mode, preview exactly how it will look, and then make it live when you are ready by changing its status to published.

@@ -4,6 +4,11 @@ describe Admin::PreviewHelper do
   dataset :versions
   
   describe "#site_preview_url" do
+    before(:each) do
+      Radiant::Config['dev.host'] = 'dev.test.host'
+      Radiant::Config['live.host'] = 'test.host'
+    end
+    
     it "should return the live URL for a page" do
       page = pages(:published)
       helper.site_preview_url(:live, page).should == "http://test.host/published/"

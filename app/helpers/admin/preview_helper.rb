@@ -10,7 +10,7 @@ module Admin::PreviewHelper
   def site_preview_url(mode, page)
     page = mode == :dev ? page.current_dev : page.current_live
     protocol = (@controller || self).request.protocol
-    host = (@controller || self).request.host_with_port
+    host = (@controller || self).request.host
     host = case mode
     when :dev
       if host =~ /^localhost/
@@ -21,6 +21,8 @@ module Admin::PreviewHelper
     when :live
       Radiant::Config['live.host'] || host
     end
-    protocol + host + page.url
+    port = (@controller || self).request.port
+    port = ([80, 443].include?(port.to_i)) ? "" : ":#{port}"
+    protocol + host + port + page.url
   end
 end

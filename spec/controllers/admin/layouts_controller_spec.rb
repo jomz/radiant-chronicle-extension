@@ -1,7 +1,10 @@
 require File.dirname(__FILE__) + '/../../spec_helper'
+require File.dirname(__FILE__) + '/../shared/resource_controller'
 
 describe Admin::LayoutsController do
   dataset :users, :layouts
+  
+  it_should_behave_like("versioned resource controller")
   
   before :each do
     login_as :developer
