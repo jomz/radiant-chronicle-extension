@@ -14,7 +14,7 @@ class ChronicleExtension < Radiant::Extension
     end
   end
   
-  extension_config do
+  extension_config do |config|
     config.gem 'will_paginate', :source => 'http://gemcutter.org'
   end
 
