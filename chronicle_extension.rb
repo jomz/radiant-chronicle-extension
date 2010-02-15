@@ -13,6 +13,10 @@ class ChronicleExtension < Radiant::Extension
       admin.resources :versions, :member => { :diff => :get, :summary => :get }
     end
   end
+  
+  extension_config do
+    config.gem 'will_paginate', :source => 'http://gemcutter.org'
+  end
 
   def activate
     require 'chronicle/diff'
