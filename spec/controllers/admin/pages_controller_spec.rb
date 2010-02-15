@@ -76,25 +76,25 @@ describe Admin::PagesController do
   end
   
   describe "saving a page" do
-    it "should clear the page cache when a published page is saved" do
+    it "should clear the page cache when a page is saved with the publish flag set" do
       Radiant::Cache.should_receive(:clear)
-      put :update, :id => page_id(:home), :page => {:breadcrumb => 'Homepage', "status_id"=>Status[:published].id.to_s}
+      put :update, :id => page_id(:home), :publish => "1", :page => {:breadcrumb => 'Homepage'}
     end
     
-    it "should clear the page cache when a hidden page is saved" do
-      Radiant::Cache.should_receive(:clear)
-      put :update, :id => page_id(:home), :page => {:breadcrumb => 'Homepage', "status_id"=>Status[:hidden].id.to_s}
-    end
+    # it "should clear the page cache when a hidden page is saved" do
+    #   Radiant::Cache.should_receive(:clear)
+    #   put :update, :id => page_id(:home), :page => {:breadcrumb => 'Homepage', "status_id"=>Status[:hidden].id.to_s}
+    # end
         
-    it "should not clear the page cache when a draft page is saved" do
+    it "should not clear the page cache when a page is saved without the publish flag set" do
       Radiant::Cache.should_not_receive(:clear)
-      put :update, :id => page_id(:home), :page => {:breadcrumb => 'Homepage', "status_id"=>Status[:draft].id.to_s}
+      put :update, :id => page_id(:home), :page => {:breadcrumb => 'Homepage'}
     end
     
-    it "should not clear the page cache when a reviewed page is saved" do
-      Radiant::Cache.should_not_receive(:clear)
-      put :update, :id => page_id(:home), :page => {:breadcrumb => 'Homepage', "status_id"=>Status[:reviewed].id.to_s}
-    end
+    # it "should not clear the page cache when a reviewed page is saved" do
+    #   Radiant::Cache.should_not_receive(:clear)
+    #   put :update, :id => page_id(:home), :page => {:breadcrumb => 'Homepage', "status_id"=>Status[:reviewed].id.to_s}
+    # end
   end
   
   describe "deleting a page" do

@@ -25,6 +25,9 @@ class VersionsDataset < Dataset::Base
       create_version
     end
     create_versioned_page "Env Dump", :class_name => "EnvDumpPage"
+    create_versioned_page "File Not Found" do
+      create_version :status_id => Status[:draft].id, :title => "Draft File Not Found"
+    end
   end
   
   helpers do

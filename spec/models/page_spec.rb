@@ -2,6 +2,8 @@ require File.dirname(__FILE__) + '/../spec_helper'
 
 describe Page do
   dataset :pages, :layouts
+  
+  Page.send :default_scope, { :order => "title ASC" }
 
   it "should be valid" do
     @page = Page.new(page_params)
