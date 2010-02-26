@@ -33,6 +33,8 @@ module Chronicle::ResourceControllerExtensions
   end
   
   def set_status
-    params[model_symbol][:status_id] = params[:publish] ? Status['Published'].id : Status['Draft'].id
+    if model.respond_to?(:status_id)
+      params[model_symbol][:status_id] = params[:publish] ? Status['Published'].id : Status['Draft'].id
+    end
   end
 end
