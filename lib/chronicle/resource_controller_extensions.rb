@@ -27,7 +27,8 @@ module Chronicle::ResourceControllerExtensions
   
   def clear_model_cache_with_draft_awareness
     # Don't clear the cache if it's unpublished
-    if model.respond_to?(:status_id) && model.status_id >= Status[:published].id
+    # (but do if it's unversioned)
+    if !model.respond_to?(:status_id) || model.status_id >= Status[:published].id
       clear_model_cache_without_draft_awareness
     end
   end
