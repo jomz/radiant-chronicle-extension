@@ -58,7 +58,9 @@ class ChronicleExtension < Radiant::Extension
     admin.layout.index.add :tbody, 'status_cell', :before => "modify_cell"
     admin.layout.index.add :thead, 'status_header', :before => "modify_header"
 
-    admin.tabs.add "History", "/admin/versions/", :visibility => [:all]
+    tab 'Content' do
+      add_item 'History', '/admin/versions/', :visibility => [:all]
+    end
   end
 
 end
