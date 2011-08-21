@@ -24,29 +24,18 @@ class ChronicleExtension < Radiant::Extension
 
     Admin::ResourceController.class_eval { include Chronicle::ResourceControllerExtensions }
     Admin::PagesController.class_eval { include Chronicle::Interface }
-    Admin::PagesController.class_eval { include Chronicle::PagesControllerExtensions }
     Admin::SnippetsController.class_eval { include Chronicle::Interface }
     Admin::LayoutsController.class_eval { include Chronicle::Interface }
 
     ApplicationHelper.send :include, Chronicle::HelperExtensions
 
-    admin.page.edit.add :main, "admin/timeline", :before => "edit_header"
+    admin.page.edit.add :form_bottom, "admin/timeline", :before => "edit_buttons"
     admin.page.edit.add :main, 'admin/version_diff_popup'
-    admin.page.edit.add :form_bottom, 'view_page_after_save'
     admin.page.edit.add :main, 'open_preview_window'
-    admin.page.index.add :sitemap_head, 'open_preview_window'
-
-    admin.snippet.edit.add :main, "admin/timeline", :before => "edit_header"
+    admin.snippet.edit.add :form_bottom, "admin/timeline", :before => "edit_buttons"
     admin.snippet.edit.add :main, 'admin/version_diff_popup'
-    # admin.snippet.edit.add :form, 'status_field', :before => 'edit_timestamp'
-    admin.snippet.index.add :tbody, 'status_cell', :before => "modify_cell"
-    admin.snippet.index.add :thead, 'status_header', :before => "modify_header"
-
-    admin.layout.edit.add :main, "admin/timeline", :before => "edit_header"
+    admin.layout.edit.add :form_bottom, "admin/timeline", :before => "edit_buttons"
     admin.layout.edit.add :main, 'admin/version_diff_popup'
-    # admin.layout.edit.add :form, 'status_field', :before => 'edit_timestamp'
-    admin.layout.index.add :tbody, 'status_cell', :before => "modify_cell"
-    admin.layout.index.add :thead, 'status_header', :before => "modify_header"
 
     tab 'Content' do
       add_item 'History', '/admin/versions/', :visibility => [:all]

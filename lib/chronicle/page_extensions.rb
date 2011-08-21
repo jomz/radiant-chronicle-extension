@@ -5,9 +5,9 @@ module Chronicle::PageExtensions
       alias_method_chain :update, :parts_draft_versioning
       alias_method_chain :update_without_callbacks, :draft_versioning
       alias_method_chain :part, :versioned_association
-      alias_method_chain :find_by_url, :draft_versioning
+      alias_method_chain :find_by_path, :draft_versioning
       alias_method_chain :simply_versioned_create_version, :extra_version_attributes
-      alias_method_chain :url, :draft_awareness
+      alias_method_chain :path, :draft_awareness
       alias_method_chain :parent, :draft_awareness
       alias_method_chain :render, :draft_layouts
     end
@@ -64,26 +64,26 @@ module Chronicle::PageExtensions
     attributes.slice(*simply_versioned_excluded_columns)
   end
   
-  # Works the same as #find_by_url when in live mode, but in dev mode, finds
+  # Works the same as #find_by_path when in live mode, but in dev mode, finds
   # the URL using the most current version (which may be draft versions ahead
   # of the live version)
-  def find_by_url_with_draft_versioning(url, live = true, clean = true)
+  def find_by_path_with_draft_versioning(path, live = true, clean = true)
     if live
-      find_by_url_without_draft_versioning(url, live, clean)
+      find_by_path_without_draft_versioning(path, live, clean)
     else
       return nil if virtual?
-      url = clean_url(url) if clean
-      my_url = self.url(live)
-      if (my_url == url) && (not live or published?)
+      path = clean_path(path) if clean
+      my_path = self.path(live)
+      if (my_path == path) && (not live or published?)
         self.current
-      elsif (url =~ /^#{Regexp.quote(my_url)}([^\/]*)/)
+      elsif (path =~ /^#{Regexp.quote(my_path)}([^\/]*)/)
         slug_child = current_children.find {|child| child.slug == $1 }
         if slug_child
-          found = slug_child.find_by_url(url, live, clean)
+          found = slug_child.find_by_path(path, live, clean)
           return found if found
         end
         current_children.each do |child|
-          found = child.find_by_url(url, live, clean)
+          found = child.find_by_path(path, live, clean)
           return found if found
         end
         file_not_found_names = ([FileNotFoundPage] + FileNotFoundPage.descendants).map(&:name)
@@ -110,19 +110,19 @@ module Chronicle::PageExtensions
     children.map {|c| c.current }
   end
   
-  # The #url method should be aware that it's a child of a draft
-  def url_with_draft_awareness(live = true)
+  # The #path method should be aware that it's a child of a draft
+  def path_with_draft_awareness(live = true)
     if !live && parent
-      parent.current.child_url(self)
+      parent.current.child_path(self)
     else
-      url_without_draft_awareness
+      path_without_draft_awareness
     end
   end
   
   # Return the current parent if self was a current version
   def parent_with_draft_awareness
     parent = parent_without_draft_awareness
-    (parent && dev?(request)) ? parent.current : parent
+    (parent && request && dev?(request)) ? parent.current : parent
   end
   
   def render_with_draft_layouts

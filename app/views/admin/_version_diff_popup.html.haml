@@ -1,8 +1,10 @@
 - content_for :popups do
-  #version-diff-popup.popup{ :style => "display:none;" }
-    %h3
-      Version
+  #version-diff-popup.popup{ :style => "display:none" }
+    .popup_title
+      = t('version')
       %span#version-number
+
     #version-diff= "Version diff goes here"
-    %p
-      = link_to 'Close', "#", :class => 'close'
+    .buttons
+      = link_to_function t('cancel'), "$(this).closePopup()", :class=>"cancel"
+      

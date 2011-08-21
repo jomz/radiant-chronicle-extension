@@ -1,6 +1,11 @@
-= render :partial => 'admin/timeline'
+- body_classes << "reversed"
+
 %h1
-  == Version #{@version.number}
-  of
+  = "#{t('version')} #{@version.number}"
+  = t('chronicle.of')
   = link_to @version.instance.title, polymorphic_path([:edit, :admin, @version.instance.becomes(@version.instance.class.base_class)])
+
 = render :partial => "admin/#{@version.versionable_type.downcase.pluralize}/diff", :locals => {:version => @version}
+
+= render :partial => 'admin/timeline'
+

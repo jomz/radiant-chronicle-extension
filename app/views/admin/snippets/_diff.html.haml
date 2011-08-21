@@ -1,10 +1,10 @@
 #diff.form-area
   .row
     %p
-      %label Name:
+      %label= t('name') + ':'
       %span= field_diff(version, :name)
   %div{:style => "clear:both"}
-  %h3 Content:
+  %h3= t('content') + ':'
   #pages
     .page{:style => "padding-top:0"}
       - if version.previous
@@ -13,17 +13,17 @@
         %pre= h(version.instance.content)
   .row
     %p
-      %label Filter:
+      %label= t('filter') + ':'
       %span
         - if version.previous
           = format_diff(version.previous.instance.filter_id, version.instance.filter_id)
         - else
           = h(version.instance.filter_id)
     %p
-      %label Status:
+      %label= t('status') + ':'
       %span= status_diff(version)
   %div{:style => "clear:both"}
   %p= updated_stamp(version.instance)
   - form_tag(edit_admin_snippet_path(:id => version.versionable_id), :method => :get) do
     = hidden_field_tag(:version, version.number)
-    = submit_tag("Revert to Version #{version.number}", :name => nil)
+    = submit_tag("#{I18n.t('chronicle.revert_to_version')} #{version.number}", :name => nil)

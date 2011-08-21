@@ -13,7 +13,7 @@ module Chronicle::ResourceControllerExtensions
       (action_name == "update" && params["page"] && params["page"]["status_id"].to_i >= Status[:published].id)
         self.model = case
         when params[:version] && version = model.versions.get_version(params[:version].to_i)
-          flash[:notice] = "Loaded version #{version.number}. Click save to revert to this content."
+          flash[:notice] = I18n.t('chronicle.loaded_version_click_save', :version => version.number)
           version.instance
         when model.respond_to?(:current) && model.respond_to?(:versions)
           # check for both 'current' and 'versions' methods because some other extensions use the current

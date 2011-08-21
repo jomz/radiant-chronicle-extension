@@ -6,6 +6,8 @@ module Chronicle::Tags
     end
   end
 
+  class TagError < StandardError; end
+  
   desc %{
     Renders the snippet specified in the @name@ attribute within the context of a page.
 
@@ -21,7 +23,24 @@ module Chronicle::Tags
     <pre><code><r:snippet name="snippet_name">Lorem ipsum dolor...</r:snippet></code></pre>
   }
   tag 'snippet' do |tag|
-    if name = tag.attr['name']
+    required_attr(tag, 'name')
+    name = tag['name']
+
+    snippet = snippet_cache(name.strip)
+    
+    if snippet
+      tag.locals.yield = tag.expand if tag.double?
+      tag.globals.page.render_snippet(snippet)
+    else
+      raise TagError.new("snippet '#{name}' not found")
+    end
+  end
+
+  def snippet_cache(name)
+    @snippet_cache ||= {}
+
+    snippet = @snippet_cache[name]
+    unless snippet
       snippet = if dev?(request)
         # fastest way to find dev snippet is to find live one and then adjust for changed name
         s = Snippet.find_by_name(name.strip)
@@ -34,30 +53,25 @@ module Chronicle::Tags
       else
         Snippet.find_by_name_and_status_id(name.strip, Status[:published].id)
       end
-      if snippet
-        tag.locals.yield = tag.expand if tag.double?
-        tag.globals.page.render_snippet(snippet)
-      else
-        raise StandardTags::TagError.new('snippet not found')
-      end
-    else
-      raise StandardTags::TagError.new("`snippet' tag must contain `name' attribute")
+      @snippet_cache[name] = snippet
     end
+    snippet
   end
+  private :snippet_cache
   
   desc %{
-    Inside this tag all page related tags refer to the page found at the @url@ attribute.
-    @url@s may be relative or absolute paths.
+    Inside this tag all page related tags refer to the page found at the @path@ attribute.
+    @path@s may be relative or absolute paths.
 
     *Usage:*
 
-    <pre><code><r:find url="value_to_find">...</r:find></code></pre>
+    <pre><code><r:find path="value_to_find">...</r:find></code></pre>
   }
   tag 'find' do |tag|
-    url = tag.attr['url']
-    raise TagError.new("`find' tag must contain `url' attribute") unless url
+    required_attr(tag,'path','url')
+    path = tag.attr['path'] || tag.attr['url']
 
-    found = Page.find_by_url(absolute_path_for(tag.locals.page.url, url), !dev?(tag.globals.page.request))
+    found = Page.find_by_path(absolute_path_for(tag.locals.page.path, path), !dev?(tag.globals.page.request))
     if page_found?(found)
       tag.locals.page = found
       tag.expand

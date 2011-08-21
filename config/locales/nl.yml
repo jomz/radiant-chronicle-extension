@@ -1,0 +1,23 @@
+---
+nl:
+  datetime:
+    distance_in_words:
+      about_x_hours:
+        one:   "ongeveer 1 uur"
+        other: "ongeveer %{count} uur"
+      x_days: "%{count} dagen"
+  chronicle:
+    and: en
+    ago: geleden
+    by: door # author
+    continue_editing: verder bewerken
+    loaded_version_click_save: "Versie %{version} is ingeladen. Klik opslaan om naar deze versie terug te keren."
+    metadata: Metadata
+    of: van
+    publish: publiceren
+    page_parts: Page Parts
+    revert_to_version: Terugkeren naar versie
+    saved: "Opgeslagen"
+    show_diff: Toon verschil
+    time: Tijd
+  history: Geschiedenis

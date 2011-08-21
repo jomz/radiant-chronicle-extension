@@ -1,0 +1,17 @@
+---
+en:
+  chronicle:
+    and: and
+    ago: ago
+    by: by # author
+    continue_editing: continue editing
+    loaded_version_click_save: "Loaded version %{version}. Click save to revert to this content."
+    metadata: Metadata
+    of: of
+    publish: publish
+    revert_to_version: Revert to Version
+    saved: "Saved"
+    page_parts: Page Parts
+    show_diff: Show difference
+    time: Time
+  history: History

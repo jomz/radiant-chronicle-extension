@@ -1,9 +1,0 @@
-- content_for :page_scripts do
-  :plain
-    document.observe("dom:loaded", function() {
-      $$('#main #content form')[0].observe('submit', function() {
-        if ($F('view_after_saving')) {
-          previewWindow = window.open('','radiant_cms_page_preview');
-        }
-      });
-    });
