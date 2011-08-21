@@ -6,7 +6,7 @@ describe Admin::SnippetsController do
 
   it_should_behave_like("versioned resource controller")  
   before :each do
-    login_as :developer
+    login_as :admin
   end
 
   describe "editing a snippet" do

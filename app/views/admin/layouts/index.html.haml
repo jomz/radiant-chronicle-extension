@@ -35,9 +35,9 @@
                   = " + " + layout.current.status.name
           - tbody.modify_cell do
             %td.remove
-              = link_to image('remove', :alt => 'Remove Layout'), remove_admin_layout_url(layout)
+              = link_to 'Remove Layout', remove_admin_layout_url(layout)
 
 - render_region :bottom do |bottom|
   - bottom.new_button do
     %p
-      = link_to image('new-layout', :alt => "New Layout"), new_admin_layout_url
+      = link_to image('new_layout', :alt => "New Layout"), new_admin_layout_url

@@ -30,9 +30,9 @@
                   = " + " + snippet.current.status.name
           - tbody.modify_cell do
             %td.remove
-              = link_to image('remove', :alt => 'Remove Snippet'), remove_admin_snippet_url(snippet)
+              = link_to 'Remove Snippet', remove_admin_snippet_url(snippet)
 
 - render_region :bottom do |bottom|
   - bottom.new_button do
     %p
-      = link_to image('new-snippet', :alt => 'New Snippet'), new_admin_snippet_url
+      = link_to image('new_snippet', :alt => 'New Snippet'), new_admin_snippet_url

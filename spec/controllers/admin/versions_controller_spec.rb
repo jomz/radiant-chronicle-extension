@@ -4,7 +4,7 @@ describe Admin::VersionsController do
   dataset :versions, :users
   
   before :each do
-    login_as :developer
+    login_as :admin
   end
   
   describe "GET 'index'" do
