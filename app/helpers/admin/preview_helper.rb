@@ -21,8 +21,6 @@ module Admin::PreviewHelper
     when :live
       Radiant::Config['live.host'] || host
     end
-    port = (@controller || self).request.port
-    port = ([80, 443].include?(port.to_i)) ? "" : ":#{port}"
-    protocol + host + port + page.url
+    protocol + host + page.url(mode == :live)
   end
 end
