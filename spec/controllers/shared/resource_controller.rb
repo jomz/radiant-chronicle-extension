@@ -1,4 +1,3 @@
-
 shared_examples_for "versioned resource controller" do
   
   it { controller.should respond_to(:load_model_with_version) }

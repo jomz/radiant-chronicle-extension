@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../../spec_helper'
 require File.dirname(__FILE__) + '/../shared/resource_controller'
 
 describe Admin::PagesController do
-  dataset :users, :pages
+  dataset :versions
 
   it_should_behave_like("versioned resource controller")
 
@@ -14,7 +14,7 @@ describe Admin::PagesController do
     integrate_views
     
     before(:each) do
-      @page = pages(:first)
+      @page = pages(:published)
       @page.save # version 1
       @page.title = "Draft of First"
       @page.status = Status[:draft]
@@ -34,51 +34,12 @@ describe Admin::PagesController do
       assigns[:page].title.should == @page.versions.first_version.instance.title
       assigns[:page].lock_version.should == @page.current.lock_version
     end
-    
-    it "should have the version diff popup" do
-      get :edit, :id => page_id(:first)
-      response.should be_success
-      response.should have_selector("div#version-diff-popup")
-    end
-  end
-  
-  describe "previewing a page" do
-    integrate_views
-    
-    before(:each) do
-      @page = pages(:first)
-    end
-    
-    it "should add javascript to the flash when view_after_saving is set" do
-      put :update, :id=>@page.id, "continue"=>"Save and Continue Editing", "page"=>params_for_page(@page), "view_after_saving"=>"1"
-      response.should be_redirect
-      flash[:javascript].should =~ %r{window.open}
-    end
-
-    it "should not add javascript to the flash when view_after_saving is not set" do
-      put :update, :id=>@page.id, "continue"=>"Save and Continue Editing", "page"=>params_for_page(@page)
-      response.should be_redirect
-      flash[:javascript].should be_nil
-    end
-    
-    it "should set view_after_saving in the session when view_after_saving is set" do
-      put :update, :id=>@page.id, "continue"=>"Save and Continue Editing", "page"=>params_for_page(@page), "view_after_saving"=>"1"
-      response.should be_redirect
-      session[:view_after_saving].should be_true
-    end
-    
-    it "should unset view_after_saving in the session when view_after_saving is not set" do
-      session[:view_after_saving] = true
-      put :update, :id=>@page.id, "continue"=>"Save and Continue Editing", "page"=>params_for_page(@page)
-      response.should be_redirect
-      session[:view_after_saving].should_not be_true
-    end
   end
   
   describe "saving a page" do
     it "should clear the page cache when a page is saved with the publish flag set" do
       Radiant::Cache.should_receive(:clear)
-      put :update, :id => page_id(:home), :publish => "1", :page => {:breadcrumb => 'Homepage'}
+      put :update, :id => page_id(:published), :publish => "1", :page => {:breadcrumb => 'Foo'}
     end
     
     # it "should clear the page cache when a hidden page is saved" do
@@ -101,7 +62,7 @@ describe Admin::PagesController do
     integrate_views
     
     before :each do
-      @page = pages(:first)
+      @page = pages(:published)
       @page.update_attributes(:title => "current", :status_id => Status[:draft].id)
     end
     
@@ -112,7 +73,8 @@ describe Admin::PagesController do
     
     it "should be destroyed" do
       delete :destroy, :id => @page.id
-      flash[:notice].should == "The pages were successfully removed from the site."
+      get :edit, :id => @page.id
+      flash[:notice].should =~ /could not be found/
     end
   end
   

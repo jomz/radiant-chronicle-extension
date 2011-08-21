@@ -2,9 +2,9 @@ class VersionsDataset < Dataset::Base
   uses :home_page, :users
   
   def load
-    create_versioned_page "Published"
+    create_versioned_page "Published", :published_at => 1.minute.ago
     create_versioned_page "Draft", :status_id => Status[:draft].id
-    create_versioned_page "Page with Draft" do
+    create_versioned_page "Page with Draft", :published_at => 1.minute.ago do
       create_version :status_id => Status[:draft].id
     end
     create_versioned_page "Page with Reviewed" do
@@ -12,7 +12,7 @@ class VersionsDataset < Dataset::Base
     end
     create_versioned_page "Reviewed", :status_id => Status[:reviewed].id
     create_versioned_page "Hidden", :status_id => Status[:hidden].id
-    create_versioned_page "Published with many versions" do
+    create_versioned_page "Published with many versions", :published_at => 1.minute.ago do
       create_version
       create_version
     end
@@ -22,9 +22,10 @@ class VersionsDataset < Dataset::Base
     end
     create_versioned_page "Updated by existing" do
       UserActionObserver.current_user = users(:existing)
-      create_version
+      create_version :published_at => 2.minutes.ago
+#      create_version :published_at => 1.minute.ago
     end
-    create_versioned_page "Env Dump", :class_name => "EnvDumpPage"
+    create_versioned_page "Archive", :class_name => "ArchivePage"
     create_versioned_page "File Not Found" do
       create_version :status_id => Status[:draft].id, :title => "Draft File Not Found"
     end

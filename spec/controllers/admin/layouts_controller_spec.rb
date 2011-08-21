@@ -26,10 +26,5 @@ describe Admin::LayoutsController do
       do_get
       assigns[:layout].content.should == "foobar"
     end
-    
-    it "should have a version diff popup" do
-      do_get
-      response.should have_selector("div#version-diff-popup")
-    end
   end
 end

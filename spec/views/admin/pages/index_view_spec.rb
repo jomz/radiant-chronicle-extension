@@ -6,21 +6,25 @@ describe "/admin/pages/" do
   describe "modified node view" do
     before(:each) do
       assigns[:template_name] = 'index' # for Admin::RegionsHelper
+      template.extend Admin::TimelineHelper
+      template.extend Admin::PagesHelper
     end
     
     it "should have published plus draft" do
       page = pages(:page_with_draft)
       render_node(page)
-      response.should have_selector("td", :class => "published-status status") do |td|
-        td.should have_selector("span", :class => "draft-status status", :content => "+ Draft")
+      response.should have_selector("td", :class => "status") do |td|
+        td.should have_selector("span", :class => "published_status status", :content => "Published")
+        td.should have_selector("span", :class => "draft_status status", :content => "+ Draft")
       end
     end
     
     it "should have published plus reviewed" do
       page = pages(:page_with_reviewed)
       render_node(page)
-      response.should have_selector("td", :class => "published-status status") do |td|
-        td.should have_selector("span", :class => "reviewed-status status", :content => "+ Reviewed")
+      response.should have_selector("td", :class => "status") do |td|
+        td.should have_selector("span", :class => "published_status status", :content => "Published")
+        td.should have_selector("span", :class => "reviewed_status status", :content => "+ Reviewed")
       end
     end
     

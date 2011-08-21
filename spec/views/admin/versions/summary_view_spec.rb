@@ -25,7 +25,7 @@ describe "/admin/versions/summary" do
     end 
   
     it "should display the version number" do
-      response.should have_selector("span.version-number", :content => "Version 2")
+      response.should have_selector("div.popup_title", :content => "Version 2")
     end
   
     it "should display the author" do
@@ -33,19 +33,15 @@ describe "/admin/versions/summary" do
     end
   
     it "should display the update time in abbreviated form" do
-      response.should have_selector("span.version-updated-at") do |span|
-        span.should have_selector("abbr", :content => "about 1 hour ago")
-      end
+      response.should have_selector("abbr", :content => "about 1 hour ago")
     end
   
     it "should display the status" do
-      response.should have_selector("span.version-status", :content => "Published")
+      response.should have_selector("span.version-status", :content => "published")
     end
     
     it "should display the diff link" do
-      response.should have_selector("span.diff-link") do |span|
-        span.should have_selector("a", :onclick=>"load_version_diff('/admin/versions/#{@version.id}/diff', this);; return false;", :href=>"#")
-      end
+      response.should have_selector("a.diff-link")
     end
   end
   
@@ -55,8 +51,6 @@ describe "/admin/versions/summary" do
     assigns[:version] = @version
     render 'admin/versions/summary'
     
-    response.should have_selector("span.version-updated-at") do |span|
-      span.should have_selector("abbr", :title => "January 01, 2009 01:57 PM")
-    end
+    response.should have_selector("abbr", :title => "Thu Jan 01 13:57:00 UTC 2009")
   end
 end

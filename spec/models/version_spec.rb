@@ -33,12 +33,12 @@ describe Version do
   end
   
   it "should instantiate a draft of a different class_name" do
-    @page = pages(:env_dump)
+    @page = pages(:archive)
     @page.class_name = ""
     @page.status_id = Status[:draft].id
     @page.save
     
-    @page.class.should == EnvDumpPage
+    @page.class.should == ArchivePage
     @page.current.class.should == Page
   end
   
@@ -164,8 +164,7 @@ describe Version do
     
     it "should include a part deletion" do
       page = pages(:published)
-      page.parts_attributes = [page.parts.first.attributes.merge("_delete" => "1")]
-      page.parts.first.instance_variable_get("@marked_for_destruction").should == true
+      page.parts_attributes = [page.parts.first.attributes.merge("_destroy" => "1")]
       page.save
       page.reload
       page.parts.should be_empty
